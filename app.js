@@ -7,6 +7,8 @@ const authRouter = require("./routes/authRouter");
 const passportSetup = require("./config/passportSetup");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser");
+const checkAuth = require("./middleware/checkAuth");
 
 app.use(
   cookieSession({
@@ -17,6 +19,8 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(cookieParser());
 
 app.use(express.json());
 app.use(
@@ -44,6 +48,10 @@ mongoose.connection.on(
 );
 
 app.use("/auth", authRouter);
+
+app.get("/profile", checkAuth, (req, res) => {
+  res.render("profile");
+});
 
 app.set("view engine", "ejs");
 
