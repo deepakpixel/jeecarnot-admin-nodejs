@@ -2,12 +2,13 @@ const router = require("express").Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const User = require("../models/admin");
+const checkAuth = require("../middleware/checkAuth");
 
 router.get("/login", (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect("password");
   }
-  res.render("login", { user: req.user });
+  res.render("login");
 });
 
 router.get("/logout", (req, res) => {
@@ -18,7 +19,7 @@ router.get("/logout", (req, res) => {
 router.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["profile"],
+    scope: ["profile", "email"],
   })
 );
 
@@ -33,27 +34,34 @@ router.get("/password", (req, res) => {
   res.render("password");
 });
 
+router.get("/change-password", checkAuth, (req, res) => {
+  res.render("changePassword");
+});
+
+router.post("/change-password", checkAuth, async (req, res) => {
+  if (req.body.password == "") {
+    throw new Error("Password field cannot be empty");
+  }
+  console.log("new password");
+  await User.findByIdAndUpdate(req.user._id, {
+    password: req.body.password,
+  }).exec();
+
+  req.logout();
+  res.status(200).json({
+    type: "success",
+    message:
+      "Password changed. Login again at http://localhost:3000/auth/login",
+  });
+});
+
 router.post("/password", async (req, res) => {
   try {
     if (!req.isAuthenticated()) {
       throw new Error("User not authenticated");
     }
-    if (req.body.password == "") {
-      throw new Error("Password field cannot be empty");
-    }
-    if (req.user.password == "") {
-      console.log("new password");
-      await User.findByIdAndUpdate(req.user._id, {
-        password: req.body.password,
-      }).exec();
 
-      req.logout();
-      res.status(200).json({
-        type: "success",
-        message:
-          "Password saved. Login again at http://localhost:3000/auth/login",
-      });
-    } else if (req.user.password == req.body.password) {
+    if (req.user.password == req.body.password) {
       console.log("passwords matched");
       const token = jwt.sign(
         {

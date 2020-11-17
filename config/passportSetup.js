@@ -27,17 +27,24 @@ passport.use(
     },
     async (accessToken, refereshToken, profile, done) => {
       console.log("passport callback");
+      console.log(profile);
       try {
         let user = await User.findOne({ googleID: profile.id }).exec();
         if (user) {
           console.log("user found" + user);
         } else {
-          user = new User({
-            googleID: profile.id,
-            username: profile.displayName,
-          });
-          await user.save();
-          console.log("user created" + user);
+          if (process.env.registerMode == "on") {
+            user = new User({
+              googleID: profile.id,
+              username: profile.displayName,
+              email: profile.emails[0].value,
+            });
+            await user.save();
+            console.log("user created" + user);
+          } else {
+            console.error("User does not exist");
+            throw new Error("User does not exist");
+          }
         }
         done(null, user);
       } catch (error) {
