@@ -23,7 +23,7 @@ passport.use(
     {
       clientID: process.env.clientID,
       clientSecret: process.env.clientSecret,
-      callbackURL: "/auth/callback",
+      callbackURL: "/auth/google/redirect",
     },
     async (accessToken, refereshToken, profile, done) => {
       console.log("passport callback");

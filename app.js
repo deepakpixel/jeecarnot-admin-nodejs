@@ -4,6 +4,19 @@ const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRouter");
+const passportSetup = require("./config/passportSetup");
+const passport = require("passport");
+const cookieSession = require("cookie-session");
+
+app.use(
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [process.env.cookieKey],
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(express.json());
 app.use(
@@ -31,6 +44,12 @@ mongoose.connection.on(
 );
 
 app.use("/auth", authRouter);
+
+app.set("view engine", "ejs");
+
+app.get("/", (req, res) => {
+  res.render("home");
+});
 
 app.use((req, res, next) => {
   const error = new Error("Not Found");
