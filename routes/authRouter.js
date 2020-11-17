@@ -5,7 +5,7 @@ const User = require("../models/admin");
 
 router.get("/login", (req, res) => {
   if (req.isAuthenticated()) {
-    res.redirect("password");
+    return res.redirect("password");
   }
   res.render("login", { user: req.user });
 });
@@ -28,7 +28,7 @@ router.get("/google/redirect", passport.authenticate("google"), (req, res) => {
 
 router.get("/password", (req, res) => {
   if (!req.isAuthenticated()) {
-    res.redirect("login");
+    return res.redirect("login");
   }
   res.render("password");
 });
