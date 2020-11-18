@@ -30,21 +30,19 @@ passport.use(
       console.log(profile);
       try {
         let user = await User.findOne({ googleID: profile.id }).exec();
-        if (user) {
-          console.log("user found" + user);
-        } else {
-          if (process.env.registerMode == "on") {
-            user = new User({
-              googleID: profile.id,
-              username: profile.displayName,
-              email: profile.emails[0].value,
-            });
-            await user.save();
-            console.log("user created" + user);
-          } else {
-            console.error("User does not exist");
-            throw new Error("User does not exist");
-          }
+        if (!user && process.env.registerMode == "on") {
+          user = new User({
+            googleID: profile.id,
+            username: profile.displayName,
+            email: profile.emails[0].value,
+          });
+          await user.save();
+          console.log("user created" + user);
+        } else if (!user) {
+          console.error("User does not exist or registrations are not allowed");
+          throw new Error(
+            "User does not exist or registrations are not allowed"
+          );
         }
         done(null, user);
       } catch (error) {

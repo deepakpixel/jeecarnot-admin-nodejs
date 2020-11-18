@@ -34,24 +34,22 @@ router.get("/change-password", checkAuth, (req, res) => {
 
 router.post("/change-password", checkAuth, async (req, res) => {
   try {
-    if (req.body.password == "") {
+    if (req.body.newPassword == "") {
       throw new Error("Password field cannot be empty");
     }
     if (!req.user) {
       throw new Error("User data unavailable");
     }
-    let id = req.user._id;
+    let result = await bcrypt.compare(req.body.oldPassword, req.user.password);
+    if (!result) {
+      throw new Error("old password incorrect");
+    }
     console.log("new password");
 
-    await bcrypt.hash(req.body.password, 10, async (err, hash) => {
-      if (err) {
-        throw err;
-      } else {
-        await User.findByIdAndUpdate(id, {
-          password: hash,
-        }).exec();
-      }
-    });
+    let hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+    await User.findByIdAndUpdate(req.user._id, {
+      password: hashedPassword,
+    }).exec();
 
     req.logout();
     res.status(200).json({
@@ -80,46 +78,35 @@ router.post("/password", async (req, res) => {
       throw new Error("User not authenticated");
     }
 
-    await bcrypt.compare(
-      req.body.password,
-      req.user.password,
-      (err, result) => {
-        if (err) {
-          throw err;
-        }
-        let token;
-        if (result === true) {
-          console.log("passwords matched");
-          try {
-            token = req.cookies.token;
-            jwt.verify(token, process.env.jwtKey);
-            console.log("token valid");
-          } catch (error) {
-            console.log("new token");
-            token = jwt.sign(
-              {
-                ...req.user,
-              },
-              process.env.jwtKey,
-              {
-                expiresIn: "1h",
-              }
-            );
+    let result = await bcrypt.compare(req.body.password, req.user.password);
+    let token;
+    if (result === true) {
+      console.log("passwords matched");
+      try {
+        token = req.cookies.token;
+        jwt.verify(token, process.env.jwtKey);
+        console.log("token valid");
+      } catch (error) {
+        console.log("new token");
+        token = jwt.sign(
+          {
+            id: req.user._id,
+          },
+          process.env.jwtKey,
+          {
+            expiresIn: "1h",
           }
-
-          res.cookie("token", token);
-          return res.status(200).json({
-            type: "success",
-            message: "password verified",
-          });
-        } else {
-          return res.status(500).json({
-            type: "error",
-            error: "incorrect password",
-          });
-        }
+        );
       }
-    );
+
+      res.cookie("token", token);
+      return res.status(200).json({
+        type: "success",
+        message: "password verified",
+      });
+    } else {
+      throw new Error("incorrect password");
+    }
   } catch (error) {
     res.status(500).json({
       type: "error",
