@@ -15,7 +15,7 @@ const adminSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    default: "admin",
+    default: "$2b$10$uWhFpJMB1rJUyyw6Kjz6fOYgZN16DIa/rxvQHL2NB68UQU/8u9iMK",
   },
 });
 

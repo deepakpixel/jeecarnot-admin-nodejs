@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/deepakpixel/jeecarnot-admin-nodejs#readme",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
     "dotenv": "^8.2.0",
