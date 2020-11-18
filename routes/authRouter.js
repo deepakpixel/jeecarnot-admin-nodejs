@@ -87,17 +87,26 @@ router.post("/password", async (req, res) => {
         if (err) {
           throw err;
         }
+        let token;
         if (result === true) {
           console.log("passwords matched");
-          const token = jwt.sign(
-            {
-              ...req.user,
-            },
-            process.env.jwtKey,
-            {
-              expiresIn: "1h",
-            }
-          );
+          try {
+            token = req.cookies.token;
+            jwt.verify(token, process.env.jwtKey);
+            console.log("token valid");
+          } catch (error) {
+            console.log("new token");
+            token = jwt.sign(
+              {
+                ...req.user,
+              },
+              process.env.jwtKey,
+              {
+                expiresIn: "1h",
+              }
+            );
+          }
+
           res.cookie("token", token);
           return res.status(200).json({
             type: "success",
