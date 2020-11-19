@@ -17,6 +17,14 @@ const adminSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  registeredOn: {
+    type: String,
+    required: true,
+  },
+  currentLogin: {
+    type: String,
+    default: "00:00:00 UTC Thursday, 1 January 1970",
+  },
   lastLogin: {
     type: String,
   },
