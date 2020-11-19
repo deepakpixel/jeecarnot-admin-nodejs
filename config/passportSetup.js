@@ -44,6 +44,9 @@ passport.use(
             "User does not exist or registrations are not allowed"
           );
         }
+        await User.findByIdAndUpdate(user._id, {
+          lastLogin: new Date(),
+        }).exec();
         done(null, user);
       } catch (error) {
         console.error(error);

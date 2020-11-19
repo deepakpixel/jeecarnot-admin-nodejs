@@ -50,7 +50,11 @@ mongoose.connection.on(
 app.use("/auth", authRouter);
 
 app.get("/profile", checkAuth, (req, res) => {
-  res.render("profile");
+  res.status(200).json({
+    name: req.user.username,
+    email: req.user.email,
+    lastLogin: req.user.lastLogin,
+  });
 });
 
 app.set("view engine", "ejs");

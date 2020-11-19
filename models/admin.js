@@ -17,6 +17,9 @@ const adminSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  lastLogin: {
+    type: String,
+  },
 });
 
 adminSchema.pre("save", async function (next) {
