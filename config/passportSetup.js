@@ -35,6 +35,7 @@ passport.use(
             googleID: profile.id,
             username: profile.displayName,
             email: profile.emails[0].value,
+            registeredOn: new Date(),
           });
           await user.save();
           console.log("user created" + user);
@@ -44,6 +45,11 @@ passport.use(
             "User does not exist or registrations are not allowed"
           );
         }
+        let currentLogin = user.currentLogin;
+        await User.findByIdAndUpdate(user._id, {
+          lastLogin: currentLogin,
+          currentLogin: new Date(),
+        }).exec();
         done(null, user);
       } catch (error) {
         console.error(error);
