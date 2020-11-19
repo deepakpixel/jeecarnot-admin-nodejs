@@ -4,6 +4,7 @@ const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRouter");
+const adminRouter = require("./routes/adminRouter");
 const passportSetup = require("./config/passportSetup");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
@@ -48,6 +49,7 @@ mongoose.connection.on(
 );
 
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
 
 app.get("/profile", checkAuth, (req, res) => {
   res.status(200).json({
