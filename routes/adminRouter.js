@@ -94,7 +94,7 @@ router.post("/menteeSearch", checkAuth, async (req, res, next) => {
     let results = responses[1];
 
     console.log(results);
-    res.status(200).json({
+    return res.status(200).json({
       totalResults,
       results,
     });
@@ -158,7 +158,7 @@ router.post("/mentorSearch", checkAuth, async (req, res, next) => {
     let results = responses[1];
 
     console.log(results);
-    res.status(200).json({
+    return res.status(200).json({
       totalResults,
       results,
     });
