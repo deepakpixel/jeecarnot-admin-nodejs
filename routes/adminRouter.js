@@ -80,7 +80,7 @@ router.post("/menteeSearch", checkAuth, async (req, res, next) => {
       Mentee.find({
         $or: searchFields,
       })
-        .count()
+        .countDocuments()
         .exec(),
       Mentee.find({
         $or: searchFields,
@@ -144,7 +144,7 @@ router.post("/mentorSearch", checkAuth, async (req, res, next) => {
       Mentor.find({
         $or: searchFields,
       })
-        .count()
+        .countDocuments()
         .exec(),
       Mentor.find({
         $or: searchFields,
