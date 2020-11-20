@@ -56,6 +56,13 @@ router.post("/menteeSearch", checkAuth, async (req, res, next) => {
       );
     }
 
+    if (
+      typeof req.body.page != "number" ||
+      typeof req.body.perPage != "number"
+    ) {
+      throw new Error("page and perPage must be numbers");
+    }
+
     let searchFields = [];
     const regex = new RegExp(escapeRegex(req.body.searchQuery), "gi");
 
@@ -111,6 +118,13 @@ router.post("/mentorSearch", checkAuth, async (req, res, next) => {
       throw new Error(
         "searchType, searchQuery, page & perPage must be supplied"
       );
+    }
+
+    if (
+      typeof req.body.page != "number" ||
+      typeof req.body.perPage != "number"
+    ) {
+      throw new Error("page and perPage must be numbers");
     }
 
     let searchFields = [];
