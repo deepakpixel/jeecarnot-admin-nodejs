@@ -1,5 +1,4 @@
 var mongoose = require("mongoose");
-var passportLocalMongoose = require("passport-local-mongoose");
 var Notifications = require("./notification");
 var MenteeSchema = mongoose.Schema(
   {
@@ -95,9 +94,5 @@ var MenteeSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-
-MenteeSchema.plugin(passportLocalMongoose, {
-  usernameField: "email",
-});
 
 module.exports = mongoose.model("Mentee", MenteeSchema);
