@@ -91,6 +91,14 @@ var MenteeSchema = mongoose.Schema(
       type: String,
       default: "none",
     },
+    pastMentors: [
+      {
+        mentorID: String,
+        assignedDate: String,
+      },
+    ],
+    webToken: String,
+    mobileTokens: [String],
   },
   { timestamps: true }
 );

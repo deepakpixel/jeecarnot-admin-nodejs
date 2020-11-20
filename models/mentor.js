@@ -6,6 +6,9 @@ var MentorSchema = mongoose.Schema({
   phone: String,
   whatsapp: String,
   college: String,
+  mentees: [String],
+  webToken: String,
+  mobileTokens: [String],
 });
 
 module.exports = mongoose.model("Mentor", MentorSchema);

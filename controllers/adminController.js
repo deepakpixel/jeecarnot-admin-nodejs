@@ -1,6 +1,10 @@
 const axios = require("axios");
 const Mentee = require("../models/mentee");
 const Mentor = require("../models/mentor");
+const AssignMentor = require("../models/assignMentor");
+const admin = require("firebase-admin");
+const serviceAccount = require("../firebase-adminSDK.json");
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 exports.getMSG91Balance = async (req, res, next) => {
   try {
@@ -158,6 +162,203 @@ exports.mentorSearch = async (req, res, next) => {
     return res.status(200).json({
       totalResults,
       results,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+async function sendNotifications(message, registrationTokens) {
+  try {
+    if (registrationTokens.length == 0) {
+      throw new Error("No tokens found");
+    }
+    let response = await admin.messaging().sendMulticast({
+      notification: {
+        title: message.title,
+        body: message.body,
+        image: message.image,
+      },
+      tokens: registrationTokens,
+    });
+    console.log("Successfully sent message:", response);
+  } catch (error) {
+    console.log("Error sending message:", error);
+  }
+}
+
+exports.assignMentor = async (req, res, next) => {
+  try {
+    if (!req.body.menteeID || !req.body.mentorID) {
+      throw new Error("menteeID and mentorID must be given");
+    }
+
+    let mentee = await Mentee.findById(req.body.menteeID).exec();
+    if (!mentee) {
+      throw new Error("Mentee does not exist");
+    }
+    if (mentee.mentorID != "none") {
+      throw new Error("Mentor is already assigned");
+    }
+
+    let mentor = await Mentor.findById(req.body.mentorID).exec();
+    if (!mentor) {
+      throw new Error("Mentor does not exist");
+    }
+
+    mentee = await Mentee.findByIdAndUpdate(req.body.menteeID, {
+      mentorID: req.body.mentorID,
+      $push: {
+        pastMentors: {
+          mentorID: req.body.mentorID,
+          assignedDate: new Date(),
+        },
+      },
+    }).exec();
+
+    mentor = await Mentor.findByIdAndUpdate(req.body.mentorID, {
+      $push: {
+        mentees: req.body.menteeID,
+      },
+    }).exec();
+
+    await AssignMentor.deleteOne({ menteeID: req.body.menteeID }).exec();
+
+    let menteeNotification = {
+      title: "Mentor Assigned",
+      body: "You have been assigned " + mentor.name + " as a mentor",
+    };
+
+    let menteeRecipients = [...mentee.mobileTokens];
+    if (mentee.webToken) menteeRecipients.push(mentee.webToken);
+
+    sendNotifications(menteeNotification, menteeRecipients);
+
+    let mentorNotification = {
+      title: "Mentee Assigned",
+      body: "You have been assigned " + mentee.name + " as a mentee",
+    };
+
+    let mentorRecipients = [...mentor.mobileTokens];
+    if (mentor.webToken) mentorRecipients.push(mentor.webToken);
+
+    sendNotifications(mentorNotification, mentorRecipients);
+
+    res.status(200).json({
+      type: "success",
+      message: "Mentor Assigned Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.getMentee = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      throw new Error("id not given");
+    }
+    let mentee = await Mentee.findById(req.params.id);
+    if (!mentee) {
+      throw new Error("Mentee not found");
+    }
+    res.status(200).json({
+      type: "success",
+      mentee,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.getMentor = async (req, res, next) => {
+  try {
+    if (!req.params.id) {
+      throw new Error("id not given");
+    }
+    let mentor = await Mentor.findById(req.params.id).exec();
+    if (!mentor) {
+      throw new Error("Mentor not found");
+    }
+    res.status(200).json({
+      type: "success",
+      mentor,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.addWebToken = async (req, res, next) => {
+  try {
+    if (!req.body.type || !req.body.id || !req.body.token) {
+      throw new Error("type, id and token must be supplied");
+    }
+
+    if (req.body.type == "mentee") {
+      await Mentee.findByIdAndUpdate(req.body.id, {
+        webToken: req.body.token,
+      }).exec();
+    } else if (req.body.type == "mentor") {
+      await Mentor.findByIdAndUpdate(req.body.id, {
+        webToken: req.body.token,
+      }).exec();
+    } else {
+      throw new Error("type must be mentee or mentor");
+    }
+    res.status(200).json({
+      type: "success",
+      message: "Token Added",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.addMobileToken = async (req, res, next) => {
+  try {
+    if (!req.body.type || !req.body.id || !req.body.token) {
+      throw new Error("type, id and token must be supplied");
+    }
+
+    if (req.body.type == "mentee") {
+      await Mentee.findByIdAndUpdate(req.body.id, {
+        $push: {
+          mobileTokens: req.body.token,
+        },
+      }).exec();
+    } else if (req.body.type == "mentor") {
+      await Mentor.findByIdAndUpdate(req.body.id, {
+        $push: {
+          mobileTokens: req.body.token,
+        },
+      }).exec();
+    } else {
+      throw new Error("type must be mentee or mentor");
+    }
+    res.status(200).json({
+      type: "success",
+      message: "Token Added",
     });
   } catch (error) {
     console.log(error);
