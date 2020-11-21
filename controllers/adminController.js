@@ -2,6 +2,7 @@ const axios = require("axios");
 const Mentee = require("../models/mentee");
 const Mentor = require("../models/mentor");
 const AssignMentor = require("../models/assignMentor");
+const Feedback = require("../models/feedback");
 const admin = require("firebase-admin");
 const serviceAccount = require("../firebase-adminSDK.json");
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
@@ -466,6 +467,67 @@ exports.changeMentor = async (req, res, next) => {
     res.status(200).json({
       type: "success",
       message: "Mentor Changed Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.fetchFeedback = async (req, res, next) => {
+  try {
+    if (!req.body.type || !req.body.page || !req.body.perPage) {
+      throw new Error("type, page & perPage must be supplied");
+    }
+
+    if (
+      typeof req.body.page != "number" ||
+      typeof req.body.perPage != "number"
+    ) {
+      throw new Error("page and perPage must be numbers");
+    }
+
+    let responses = [];
+    if (req.body.type == "all") {
+      responses = await Promise.all([
+        Feedback.find().countDocuments().exec(),
+        Feedback.find()
+          .skip((req.body.page - 1) * req.body.perPage)
+          .limit(req.body.perPage)
+          .exec(),
+      ]);
+    } else if (
+      req.body.type == "critical" ||
+      req.body.type == "pending" ||
+      req.body.type == "resolved"
+    ) {
+      responses = await Promise.all([
+        Feedback.find({
+          status: req.body.type,
+        })
+          .countDocuments()
+          .exec(),
+        Feedback.find({
+          status: req.body.type,
+        })
+          .skip((req.body.page - 1) * req.body.perPage)
+          .limit(req.body.perPage)
+          .exec(),
+      ]);
+    } else {
+      throw new Error("type must be all, critical, pending or resolved");
+    }
+
+    let totalResults = responses[0];
+    let results = responses[1];
+
+    console.log(results);
+    return res.status(200).json({
+      totalResults,
+      results,
     });
   } catch (error) {
     console.log(error);
