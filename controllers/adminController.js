@@ -537,3 +537,25 @@ exports.fetchFeedback = async (req, res, next) => {
     });
   }
 };
+
+exports.fetchMentors = async (req, res, next) => {
+  try {
+    let mentors = await Mentor.find().exec();
+    res.status(200).json({
+      totalResults: mentors.length,
+      results: mentors.map((mentor) => {
+        return {
+          name: mentor.name,
+          college: mentor.college,
+          mentees: mentor.mentees.length,
+        };
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};

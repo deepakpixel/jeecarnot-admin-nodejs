@@ -25,4 +25,6 @@ router.get("/mentor/:id", checkAuth, adminController.getMentor);
 
 router.get("/feedback", checkAuth, adminController.fetchFeedback);
 
+router.get("/fetch-mentors", checkAuth, adminController.fetchMentors);
+
 module.exports = router;
