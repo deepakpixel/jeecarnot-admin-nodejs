@@ -9,6 +9,8 @@ router.post("/mentee-search", checkAuth, adminController.menteeSearch);
 
 router.post("/mentor-search", checkAuth, adminController.mentorSearch);
 
+router.post("/send-notification", checkAuth, adminController.sendNotification);
+
 router.post("/add-web-token", checkAuth, adminController.addWebToken);
 
 router.post("/add-mobile-token", checkAuth, adminController.addMobileToken);
