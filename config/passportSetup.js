@@ -27,7 +27,6 @@ passport.use(
     },
     async (accessToken, refereshToken, profile, done) => {
       console.log("passport callback");
-      console.log(profile);
       try {
         let user = await User.findOne({ googleID: profile.id }).exec();
         if (!user && process.env.registerMode == "on") {
