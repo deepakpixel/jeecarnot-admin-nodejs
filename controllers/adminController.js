@@ -173,22 +173,18 @@ exports.mentorSearch = async (req, res, next) => {
 };
 
 async function sendNotifications(message, registrationTokens) {
-  try {
-    if (registrationTokens.length == 0) {
-      throw new Error("No tokens found");
-    }
-    let response = await admin.messaging().sendMulticast({
-      notification: {
-        title: message.title,
-        body: message.body,
-        image: message.image,
-      },
-      tokens: registrationTokens,
-    });
-    console.log("Successfully sent message:", response);
-  } catch (error) {
-    console.log("Error sending message:", error);
+  if (registrationTokens.length == 0) {
+    throw new Error("No tokens found");
   }
+  let response = await admin.messaging().sendMulticast({
+    notification: {
+      title: message.title,
+      body: message.body,
+      image: message.image,
+    },
+    tokens: registrationTokens,
+  });
+  console.log("Successfully sent message:", response);
 }
 
 exports.assignMentor = async (req, res, next) => {
@@ -236,7 +232,7 @@ exports.assignMentor = async (req, res, next) => {
     let menteeRecipients = [...mentee.mobileTokens];
     if (mentee.webToken) menteeRecipients.push(mentee.webToken);
 
-    sendNotifications(menteeNotification, menteeRecipients);
+    await sendNotifications(menteeNotification, menteeRecipients);
 
     let mentorNotification = {
       title: "Mentee Assigned",
@@ -246,7 +242,7 @@ exports.assignMentor = async (req, res, next) => {
     let mentorRecipients = [...mentor.mobileTokens];
     if (mentor.webToken) mentorRecipients.push(mentor.webToken);
 
-    sendNotifications(mentorNotification, mentorRecipients);
+    await sendNotifications(mentorNotification, mentorRecipients);
 
     res.status(200).json({
       type: "success",
