@@ -8,8 +8,9 @@ var requestSchema = mongoose.Schema(
     },
     material: String,
     status: {
-      type: Number,
-      default: 0,
+      type: String,
+      enum: ["approved", "rejected", "pending"],
+      default: "pending",
     },
   },
   { timestamps: true }

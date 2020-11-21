@@ -3,6 +3,7 @@ const Mentee = require("../models/mentee");
 const Mentor = require("../models/mentor");
 const AssignMentor = require("../models/assignMentor");
 const Feedback = require("../models/feedback");
+const Request = require("../models/request");
 const admin = require("firebase-admin");
 const serviceAccount = require("../firebase-adminSDK.json");
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
@@ -550,6 +551,51 @@ exports.fetchMentors = async (req, res, next) => {
           mentees: mentor.mentees.length,
         };
       }),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.updateMaterialRequest = async (req, res, next) => {
+  try {
+    if (!req.body.id || !req.body.status) {
+      throw new Error("id and status must be given");
+    }
+    if (req.body.status != "approved" && req.body.status != "rejected") {
+      throw new Error("status must be approved or rejected");
+    }
+
+    let request = await Request.findByIdAndUpdate(req.body.id, {
+      status: req.body.status,
+    }).exec();
+
+    if (!request) {
+      throw new Error("Request object does not exist");
+    }
+
+    let mentee = await Mentee.findById(request.menteeID).exec();
+    if (!mentee) {
+      throw new Error("Mentee does not exist");
+    }
+
+    let recipients = [...mentee.mobileTokens];
+    if (mentee.webToken) recipients.push(mentee.webToken);
+
+    let message = {
+      title: "Material Request: " + req.body.status,
+      body: request.material,
+    };
+
+    await sendNotifications(message, recipients);
+
+    res.status(200).json({
+      type: "success",
+      message: message.title,
     });
   } catch (error) {
     console.log(error);

@@ -27,4 +27,10 @@ router.get("/feedback", checkAuth, adminController.fetchFeedback);
 
 router.get("/fetch-mentors", checkAuth, adminController.fetchMentors);
 
+router.put(
+  "/material-request",
+  checkAuth,
+  adminController.updateMaterialRequest
+);
+
 module.exports = router;
