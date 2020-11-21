@@ -2,6 +2,8 @@ const axios = require("axios");
 const Mentee = require("../models/mentee");
 const Mentor = require("../models/mentor");
 const AssignMentor = require("../models/assignMentor");
+const Feedback = require("../models/feedback");
+const Request = require("../models/request");
 const admin = require("firebase-admin");
 const serviceAccount = require("../firebase-adminSDK.json");
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
@@ -466,6 +468,134 @@ exports.changeMentor = async (req, res, next) => {
     res.status(200).json({
       type: "success",
       message: "Mentor Changed Successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.fetchFeedback = async (req, res, next) => {
+  try {
+    if (!req.body.type || !req.body.page || !req.body.perPage) {
+      throw new Error("type, page & perPage must be supplied");
+    }
+
+    if (
+      typeof req.body.page != "number" ||
+      typeof req.body.perPage != "number"
+    ) {
+      throw new Error("page and perPage must be numbers");
+    }
+
+    let responses = [];
+    if (req.body.type == "all") {
+      responses = await Promise.all([
+        Feedback.find().countDocuments().exec(),
+        Feedback.find()
+          .skip((req.body.page - 1) * req.body.perPage)
+          .limit(req.body.perPage)
+          .exec(),
+      ]);
+    } else if (
+      req.body.type == "critical" ||
+      req.body.type == "pending" ||
+      req.body.type == "resolved"
+    ) {
+      responses = await Promise.all([
+        Feedback.find({
+          status: req.body.type,
+        })
+          .countDocuments()
+          .exec(),
+        Feedback.find({
+          status: req.body.type,
+        })
+          .skip((req.body.page - 1) * req.body.perPage)
+          .limit(req.body.perPage)
+          .exec(),
+      ]);
+    } else {
+      throw new Error("type must be all, critical, pending or resolved");
+    }
+
+    let totalResults = responses[0];
+    let results = responses[1];
+
+    console.log(results);
+    return res.status(200).json({
+      totalResults,
+      results,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.fetchMentors = async (req, res, next) => {
+  try {
+    let mentors = await Mentor.find().exec();
+    res.status(200).json({
+      totalResults: mentors.length,
+      results: mentors.map((mentor) => {
+        return {
+          name: mentor.name,
+          college: mentor.college,
+          mentees: mentor.mentees.length,
+        };
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.updateMaterialRequest = async (req, res, next) => {
+  try {
+    if (!req.body.id || !req.body.status) {
+      throw new Error("id and status must be given");
+    }
+    if (req.body.status != "approved" && req.body.status != "rejected") {
+      throw new Error("status must be approved or rejected");
+    }
+
+    let request = await Request.findByIdAndUpdate(req.body.id, {
+      status: req.body.status,
+    }).exec();
+
+    if (!request) {
+      throw new Error("Request object does not exist");
+    }
+
+    let mentee = await Mentee.findById(request.menteeID).exec();
+    if (!mentee) {
+      throw new Error("Mentee does not exist");
+    }
+
+    let recipients = [...mentee.mobileTokens];
+    if (mentee.webToken) recipients.push(mentee.webToken);
+
+    let message = {
+      title: "Material Request: " + req.body.status,
+      body: request.material,
+    };
+
+    await sendNotifications(message, recipients);
+
+    res.status(200).json({
+      type: "success",
+      message: message.title,
     });
   } catch (error) {
     console.log(error);

@@ -23,4 +23,14 @@ router.get("/mentee/:id", checkAuth, adminController.getMentee);
 
 router.get("/mentor/:id", checkAuth, adminController.getMentor);
 
+router.get("/feedback", checkAuth, adminController.fetchFeedback);
+
+router.get("/fetch-mentors", checkAuth, adminController.fetchMentors);
+
+router.put(
+  "/material-request",
+  checkAuth,
+  adminController.updateMaterialRequest
+);
+
 module.exports = router;
