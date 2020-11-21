@@ -15,6 +15,8 @@ router.post("/add-mobile-token", checkAuth, adminController.addMobileToken);
 
 router.post("/assign-mentor", checkAuth, adminController.assignMentor);
 
+router.post("/change-mentor", checkAuth, adminController.changeMentor);
+
 router.get("/mentee/:id", checkAuth, adminController.getMentee);
 
 router.get("/mentor/:id", checkAuth, adminController.getMentor);

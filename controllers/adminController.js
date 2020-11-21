@@ -174,7 +174,7 @@ exports.mentorSearch = async (req, res, next) => {
 
 async function sendNotifications(message, registrationTokens) {
   if (registrationTokens.length == 0) {
-    throw new Error("No tokens found");
+    throw new Error("tokens missing");
   }
   let response = await admin.messaging().sendMulticast({
     notification: {
@@ -355,6 +355,77 @@ exports.addMobileToken = async (req, res, next) => {
     res.status(200).json({
       type: "success",
       message: "Token Added",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      type: "error",
+      message: error.message,
+    });
+  }
+};
+
+exports.changeMentor = async (req, res, next) => {
+  try {
+    if (!req.body.menteeID || !req.body.mentorID) {
+      throw new Error("menteeID and mentorID must be given");
+    }
+
+    let mentee = await Mentee.findById(req.body.menteeID).exec();
+    if (!mentee) {
+      throw new Error("Mentee does not exist");
+    }
+
+    let mentor = await Mentor.findById(req.body.mentorID).exec();
+    if (!mentor) {
+      throw new Error("Mentor does not exist");
+    }
+
+    await Mentor.findByIdAndUpdate(mentee.mentorID, {
+      $pull: {
+        mentees: req.body.menteeID,
+      },
+    }).exec();
+
+    await Mentor.findByIdAndUpdate(req.body.mentorID, {
+      $push: {
+        mentees: req.body.menteeID,
+      },
+    }).exec();
+
+    await Mentee.findByIdAndUpdate(req.body.menteeID, {
+      mentorID: req.body.mentorID,
+      $push: {
+        pastMentors: {
+          mentorID: req.body.mentorID,
+          assignedDate: new Date(),
+        },
+      },
+    }).exec();
+
+    let menteeNotification = {
+      title: "Mentor Changed",
+      body: "You have been assigned " + mentor.name + " as a mentor",
+    };
+
+    let menteeRecipients = [...mentee.mobileTokens];
+    if (mentee.webToken) menteeRecipients.push(mentee.webToken);
+
+    await sendNotifications(menteeNotification, menteeRecipients);
+
+    let mentorNotification = {
+      title: "Mentee Assigned",
+      body: "You have been assigned " + mentee.name + " as a mentee",
+    };
+
+    let mentorRecipients = [...mentor.mobileTokens];
+    if (mentor.webToken) mentorRecipients.push(mentor.webToken);
+
+    await sendNotifications(mentorNotification, mentorRecipients);
+
+    res.status(200).json({
+      type: "success",
+      message: "Mentor Changed Successfully",
     });
   } catch (error) {
     console.log(error);
