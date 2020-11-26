@@ -260,7 +260,10 @@ exports.assignMentor = async (req, res, next) => {
 
     mentor = await Mentor.findByIdAndUpdate(req.body.mentorID, {
       $push: {
-        mentees: req.body.menteeID,
+        mentees: {
+          menteeID: req.body.menteeID,
+          assignedDate: new Date(),
+        },
       },
     }).exec();
 
@@ -425,13 +428,18 @@ exports.changeMentor = async (req, res, next) => {
 
     await Mentor.findByIdAndUpdate(mentee.mentorID, {
       $pull: {
-        mentees: req.body.menteeID,
+        mentees: {
+          menteeID: req.body.menteeID,
+        },
       },
     }).exec();
 
     await Mentor.findByIdAndUpdate(req.body.mentorID, {
       $push: {
-        mentees: req.body.menteeID,
+        mentees: {
+          menteeID: req.body.menteeID,
+          assignedDate: new Date(),
+        },
       },
     }).exec();
 

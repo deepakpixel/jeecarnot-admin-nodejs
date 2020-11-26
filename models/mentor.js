@@ -6,7 +6,12 @@ var MentorSchema = mongoose.Schema({
   phone: String,
   whatsapp: String,
   college: String,
-  mentees: [String],
+  mentees: [
+    {
+      menteeID: String,
+      assignedDate: String,
+    },
+  ],
   webToken: String,
   mobileTokens: [String],
 });
