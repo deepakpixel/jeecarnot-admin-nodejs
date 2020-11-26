@@ -9,11 +9,17 @@ var MentorSchema = mongoose.Schema({
   mentees: [
     {
       menteeID: String,
-      assignedDate: String,
+      assignedDate: Date,
     },
   ],
   webToken: String,
   mobileTokens: [String],
+  payments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Payment",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Mentor", MentorSchema);

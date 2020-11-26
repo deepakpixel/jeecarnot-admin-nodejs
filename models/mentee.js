@@ -94,7 +94,7 @@ var MenteeSchema = mongoose.Schema(
     pastMentors: [
       {
         mentorID: String,
-        assignedDate: String,
+        assignedDate: Date,
       },
     ],
     webToken: String,
