@@ -4,9 +4,9 @@ const Mentor = require("../models/mentor");
 const AssignMentor = require("../models/assignMentor");
 const Feedback = require("../models/feedback");
 const Request = require("../models/request");
-const admin = require("firebase-admin");
-const serviceAccount = require("../firebase-adminSDK.json");
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+const numberOfDaysBetween = require("../methods").numberOfDaysBetween;
+const payMentor = require("../methods").payMentor;
+const sendNotifications = require("../methods").sendNotifications;
 
 exports.getMSG91Balance = async (req, res, next) => {
   try {
@@ -173,21 +173,6 @@ exports.mentorSearch = async (req, res, next) => {
     });
   }
 };
-
-async function sendNotifications(message, registrationTokens) {
-  if (registrationTokens.length == 0) {
-    throw new Error("tokens missing");
-  }
-  let response = await admin.messaging().sendMulticast({
-    notification: {
-      title: message.title,
-      body: message.body,
-      image: message.image,
-    },
-    tokens: registrationTokens,
-  });
-  console.log("Successfully sent message:", response);
-}
 
 exports.sendNotification = async (req, res, next) => {
   try {
@@ -433,6 +418,16 @@ exports.changeMentor = async (req, res, next) => {
         },
       },
     }).exec();
+
+    let startDate =
+      mentee.pastMentors[mentee.pastMentors.length - 1].assignedDate;
+
+    await payMentor(
+      mentee.mentorID,
+      mentee._id,
+      startDate,
+      numberOfDaysBetween(startDate, new Date())
+    );
 
     await Mentor.findByIdAndUpdate(req.body.mentorID, {
       $push: {

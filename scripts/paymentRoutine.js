@@ -3,7 +3,6 @@ const Mentor = require("../models/mentor");
 const numberOfDaysBetween = require("../methods").numberOfDaysBetween;
 const payMentor = require("../methods").payMentor;
 
-//check if a mentor's monthly payment is due
 async function main() {
   try {
     let mentors = await Mentor.find().lean().exec();
