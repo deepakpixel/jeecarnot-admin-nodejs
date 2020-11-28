@@ -37,11 +37,11 @@ async function payMentor(mentorID, menteeID, startDate, days) {
   if (days < 1) return;
 
   let date = new Date();
-  let today = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+  let today = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
   let todayEnd = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate() + 2
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() + 1)
   );
 
   let paymentsByDate = await PaymentsByDate.findOne({
