@@ -1,0 +1,1389 @@
+{
+	"info": {
+		"_postman_id": "3b4dbeba-4224-4631-98b1-aed81f46843d",
+		"name": "JEECarnot Admin",
+		"description": "Backend for JEECarnot's Admins",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "87c39b55-ccda-46b9-b32e-49f6be01b4a3",
+						"exec": [
+							"pm.test(\"Login\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/auth/login",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				},
+				"description": "Login route, to be accessed from a browser.\r\nReturns an HTML Login form."
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "789ba7ee-4b53-4f56-9a14-b3019f7b19fe",
+						"exec": [
+							"pm.test(\"Logout\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/auth/logout",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Password",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/auth/change-password",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"auth",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "41733d99-35d9-4b6f-812b-3e88adabc5a9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"name\": { \"type\": \"string\" },\r",
+							"        \"email\": { \"type\": \"string\" },\r",
+							"        \"lastLogin\": { \"type\": \"string\" }\r",
+							"    },\r",
+							"    \"required\": [\"name\", \"email\", \"lastLogin\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/profile",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"profile"
+					]
+				},
+				"description": "Get admin profile details"
+			},
+			"response": [
+				{
+					"name": "Admin Profile",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverURL}}/profile",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "131"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"83-Qr/BvnC1kqVCoheqN84zAEw5R9U\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 06:21:31 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"lakshay angrish\",\n    \"email\": \"lakshay@angrish.com\",\n    \"lastLogin\": \"Mon Dec 07 2020 11:40:52 GMT+0530 (India Standard Time)\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get MSG91 Balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "afe2f279-f5a7-4315-b6f6-82ff821ff68e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"promotional\": { \"type\": \"number\" },\r",
+							"        \"transactional\": { \"type\": \"number\" },\r",
+							"        \"sendOTP\": { \"type\": \"number\" }\r",
+							"    },\r",
+							"    \"required\": [\"promotional\", \"transactional\", \"sendOTP\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/admin/msg91-balance",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"msg91-balance"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get MSG91 Balance",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverURL}}/admin/msg91-balance",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"msg91-balance"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "54"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"36-uRhYD8C16yfWA7TjiEbIe9jaslc\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 06:29:33 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"promotional\": 0,\n    \"transactional\": 9990,\n    \"sendOTP\": 24887\n}"
+				}
+			]
+		},
+		{
+			"name": "Mentee Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6c8ecfdc-208e-4e99-81dc-f90cce08ed94",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"totalResults\": { \"type\": \"number\" },\r",
+							"        \"results\": { \"type\": \"array\" }\r",
+							"    },\r",
+							"    \"required\": [\"totalResults\", \"results\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"searchType\": \"name\",\r\n    \"searchQuery\": \"tester\",\r\n    \"page\": 1,\r\n    \"perPage\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/mentee-search",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"mentee-search"
+					]
+				},
+				"description": "Search the list of mentees using name, email or phone as searchTypes.\r\nUse page and perPage attributes for pagination."
+			},
+			"response": [
+				{
+					"name": "Mentee Search",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"searchType\": \"name\",\r\n    \"searchQuery\": \"tester\",\r\n    \"page\": 1,\r\n    \"perPage\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/mentee-search",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"mentee-search"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "2572"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"a0c-iO0xWKJ6PUXIHFauybblagTKFS8\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 06:43:40 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalResults\": 1,\n    \"results\": [\n        {\n            \"emailVerification\": false,\n            \"profileVerification\": false,\n            \"alternatephone\": \"\",\n            \"parentname\": \"\",\n            \"parentPhone\": \"\",\n            \"class\": \"\",\n            \"lastAttemptJeeYear\": \"\",\n            \"lastAttemptJeepercentile\": \"\",\n            \"targetYear\": \"\",\n            \"modePreparation\": \"self\",\n            \"otherTargetExams\": \"\",\n            \"firstHear\": \"\",\n            \"whyWant\": \"\",\n            \"expectations\": \"\",\n            \"language\": \"english\",\n            \"materialRequirement\": \"\",\n            \"access\": [],\n            \"plan\": \"none\",\n            \"planID\": \"none\",\n            \"requests\": [],\n            \"tickets\": [],\n            \"payments\": [\n                \"5fca3651781d932638700c4d\",\n                \"5fca3732d17b0241bcca29dd\",\n                \"5fca3786c1128d3988cbdcbf\",\n                \"5fca37b1c1128d3988cbdcc1\",\n                \"5fca38033273d141083ffc24\",\n                \"5fca384c3273d141083ffc26\",\n                \"5fcaf56dd769de44908d9009\"\n            ],\n            \"mentorID\": \"none\",\n            \"mentorAssign\": \"none\",\n            \"mobileTokens\": [\n                \"egeyns-bquuo3zt4umm9xg:APA91bHlvadmO-9hcxKm-p5ZZrW360lG0dVkFBS6O37guec7srsx51hGO9s9tBKHuA7eMdqQfG7ZEmwufhfiTFSb9CHovHvpXdTnOkcETcNYoeB13HP5ID8c8iuiJboUQcPGPFV41dKh\"\n            ],\n            \"_id\": \"5fae630bfc1f9147e06d00d2\",\n            \"name\": \"tester\",\n            \"email\": \"tester@test.com\",\n            \"phone\": \"7889073286\",\n            \"notifications\": [],\n            \"salt\": \"7bd052e484c0a544866b9b8f2e4ad3038720cef6c0b0950d08eea1ae0997c406\",\n            \"hash\": \"fa6934a241c5b5c9de4aaf62554e4f195cde64be9a4b32cb6affc29bd6c639b9f169fee66c8aea7aaa7f7da60125cce41ea72c7db7316381ef2ba660b8f40494eb7764e0745f74e6b265674e8c353d0c7b57573a5ba271f731e21ec2b10c1136d8a995f9b777fb7370299b5febc3cd45d8b1ebbf851cd406c161f712db9009df688ebdef41f8582cc19fe3905b4e6b0c739669703904b6150bf431546c0066ecedc2986a0a040c136e1cee75506b7c24905799b1ec1c37f848d232cffb2e93400b467a6a3450645b2be162c1e234258107b05570b026ae2ffcc4f7ed4f1e7557fde1b27e686636c7d4cfee1f7c51d93d2ca8236d273c97dbf1267c3f78b6fd715d104c77fcfa802b2f63eb3ca6d0cae523cdc8671862155f885399bfb908cc193cd2d872dd2dfe833b4c3161acfed6e06d11662761ffa12ae336e175f24a2e02c2468e698be794456770c9f04b52e15c283eb32166d558965cbb1c2600143d1d7c3954bca3fe8c2866c0d157fef867a2007d67b7a1d7bf1b850b6a9f1f4c53ab5fd6f8e2a83012daeed85894303706807471499c8c8a5fec65986393514bc56293236996d6040da83bd9e980f8ec2d857086c96a6792e97ce242792f02cbf8dab97db31698719c38bbf13cb0e87850360596a04e0853f1ed990f3185d20f86bc055059121d806bb8863af42d45fd6bf21d7a0309f257de544ddcd4c33a03ca1e\",\n            \"createdAt\": \"2020-11-13T10:42:19.974Z\",\n            \"updatedAt\": \"2020-12-05T02:50:21.437Z\",\n            \"__v\": 0,\n            \"pastMentors\": [\n                {\n                    \"_id\": \"5fb7e26067a34b2240cb0237\",\n                    \"mentorID\": \"5fb7dc286eef851b08c34387\",\n                    \"assignedDate\": \"2020-11-20T15:36:00.000Z\"\n                },\n                {\n                    \"_id\": \"5fb896153cfdfa2208344832\",\n                    \"mentorID\": \"5fb89521f01b9e47fc3134a9\",\n                    \"assignedDate\": \"2020-11-21T04:22:45.000Z\"\n                },\n                {\n                    \"_id\": \"5fb8973511ba401fb0de70f4\",\n                    \"mentorID\": \"5fb89521f01b9e47fc3134a9\",\n                    \"assignedDate\": \"2020-11-21T04:27:33.000Z\"\n                }\n            ],\n            \"membershipExpiresOn\": \"2021-05-03T00:00:00.000Z\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Mentor Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e7c95ee-7003-4975-b67c-977898613186",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"totalResults\": { \"type\": \"number\" },\r",
+							"        \"results\": { \"type\": \"array\" }\r",
+							"    },\r",
+							"    \"required\": [\"totalResults\", \"results\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"searchType\": \"email\",\r\n    \"searchQuery\": \"chanak\",\r\n    \"page\": 1,\r\n    \"perPage\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/mentor-search",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"mentor-search"
+					]
+				},
+				"description": "Search the list of mentors using name, email or phone as searchTypes. Use page and perPage attributes for pagination."
+			},
+			"response": [
+				{
+					"name": "Mentor Search",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"searchType\": \"email\",\r\n    \"searchQuery\": \"chanak\",\r\n    \"page\": 1,\r\n    \"perPage\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/mentor-search",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"mentor-search"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "443"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1bb-2nXClhDfA7uARW6hb/htcgP1rY0\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 06:49:14 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalResults\": 1,\n    \"results\": [\n        {\n            \"mobileTokens\": [\n                \"egeyns-bquuo3zt4umm9xg:APA91bHlvadmO-9hcxKm-p5ZZrW360lG0dVkFBS6O37guec7srsx51hGO9s9tBKHuA7eMdqQfG7ZEmwufhfiTFSb9CHovHvpXdTnOkcETcNYoeB13HP5ID8c8iuiJboUQcPGPFV41dKh\"\n            ],\n            \"payments\": [],\n            \"_id\": \"5fb89521f01b9e47fc3134a9\",\n            \"name\": \"chanakya\",\n            \"email\": \"chanakya@chandragupta.com\",\n            \"mentees\": [\n                {\n                    \"_id\": \"5fc0b37332cc1f2cf8b469cf\",\n                    \"menteeID\": \"5fae60d27d43d34094d34d17\",\n                    \"assignedDate\": \"2020-11-27T08:06:11.250Z\"\n                }\n            ]\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Send Notification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "96b7856f-d2be-4e88-86a2-488379063bb6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"message\": { \"type\": \"string\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"message\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"mentor\",\r\n    \"id\": \"5fb89521f01b9e47fc3134a9\",\r\n    \"title\": \"Hello\",\r\n    \"body\": \"hello notification\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/send-notification",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"send-notification"
+					]
+				},
+				"description": "Send notifications by specifying types as mentor/mentee and passing id for the same along with notification title and body."
+			},
+			"response": [
+				{
+					"name": "Send Notification",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"mentor\",\r\n    \"id\": \"5fb89521f01b9e47fc3134a9\",\r\n    \"title\": \"Hello\",\r\n    \"body\": \"hello notification\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/send-notification",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"send-notification"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "49"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"31-A4WbRcAlz7IOrj18hNiwt6SX0r4\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:23:15 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"success\",\n    \"message\": \"Notifications sent\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Add Web Token for FCM",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f60c2900-82fc-419b-a80f-ca0ce57a14db",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"message\": { \"type\": \"string\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"message\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"mentee\",\r\n    \"id\": \"5fae60d27d43d34094d34d17\",\r\n    \"token\": \"kajbsdakdbq13e1jkajsd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/add-web-token",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"add-web-token"
+					]
+				},
+				"description": "Add web token to a mentor/mentee for Firebase Cloud Messaging."
+			},
+			"response": [
+				{
+					"name": "Add Web Token for FCM",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"mentee\",\r\n    \"id\": \"5fae60d27d43d34094d34d17\",\r\n    \"token\": \"kajbsdakdbq13e1jkajsd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/add-web-token",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"add-web-token"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "42"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"2a-k6MVmxHtSka6/+i/auHqaNwi+u8\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:25:55 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"success\",\n    \"message\": \"Token Added\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Add Mobile Token for FCM",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "12f02f0f-7380-4429-91dc-64eed7fa4c02",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"message\": { \"type\": \"string\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"message\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"mentee\",\r\n    \"id\": \"5fae60d27d43d34094d34d17\",\r\n    \"token\": \"kajbsdakdbq13e1jkajsd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/add-mobile-token",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"add-mobile-token"
+					]
+				},
+				"description": "Add mobile token to mentee/mentor for Firebase Cloud Messaging."
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "124c8279-23a1-4ded-8dd2-5f90ce536d00",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"message\": { \"type\": \"string\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"message\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mentorID\": \"5fb89521f01b9e47fc3134a9\",\r\n    \"menteeID\": \"5fae60d27d43d34094d34d17\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/assign-mentor",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"assign-mentor"
+					]
+				},
+				"description": "Assign a mentor to a mentee by specifying ids for both."
+			},
+			"response": [
+				{
+					"name": "Assign Mentor",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mentorID\": \"5fb89521f01b9e47fc3134a9\",\r\n    \"menteeID\": \"5fae60d27d43d34094d34d17\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/assign-mentor",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"assign-mentor"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "59"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3b-aP5Z6qzvtp7q85UDlkMy0QybaZk\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:33:01 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"success\",\n    \"message\": \"Mentor Assigned Successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Change Mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ce5fffe0-7f7f-46af-88f2-bb752455bbe3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"message\": { \"type\": \"string\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"message\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mentorID\": \"5fb7dc286eef851b08c34387\",\r\n    \"menteeID\": \"5fae60d27d43d34094d34d17\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/change-mentor",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"change-mentor"
+					]
+				},
+				"description": "Assign a new mentor to a mentee by specifying ids for both."
+			},
+			"response": [
+				{
+					"name": "Change Mentor",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mentorID\": \"5fb7dc286eef851b08c34387\",\r\n    \"menteeID\": \"5fae60d27d43d34094d34d17\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/change-mentor",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"change-mentor"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "58"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"3a-ts+dEMUMHdFjo4iHPRtCTC840j0\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:34:23 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"success\",\n    \"message\": \"Mentor Changed Successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Mentor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "65192faf-c8a3-4acb-a5ea-b18f58c776d9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"mentor\": { \"type\": \"object\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"mentor\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/admin/mentor/5fb7dc286eef851b08c34387",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"mentor",
+						"5fb7dc286eef851b08c34387"
+					]
+				},
+				"description": "Get a mentor's details using its id."
+			},
+			"response": [
+				{
+					"name": "Get Mentee",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverURL}}/admin/mentor/5fb7dc286eef851b08c34387",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"mentor",
+								"5fb7dc286eef851b08c34387"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "446"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1be-7gK2X9B5Btbafiy/Zn5aX0Xnbds\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:35:51 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"success\",\n    \"mentor\": {\n        \"mobileTokens\": [\n            \"egeyns-bquuo3zt4umm9xg:APA91bHlvadmO-9hcxKm-p5ZZrW360lG0dVkFBS6O37guec7srsx51hGO9s9tBKHuA7eMdqQfG7ZEmwufhfiTFSb9CHovHvpXdTnOkcETcNYoeB13HP5ID8c8iuiJboUQcPGPFV41dKh\"\n        ],\n        \"payments\": [\n            \"5fc0b37132cc1f2cf8b469cd\"\n        ],\n        \"_id\": \"5fb7dc286eef851b08c34387\",\n        \"name\": \"mentor\",\n        \"password\": \"pass\",\n        \"mentees\": [\n            {\n                \"_id\": \"5fcddafd751be714d4ba830f\",\n                \"menteeID\": \"5fae60d27d43d34094d34d17\",\n                \"assignedDate\": \"2020-12-07T07:34:21.201Z\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Mentee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a207edc5-17d8-4672-8cc4-2d520a756545",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"type\": { \"type\": \"string\" },\r",
+							"        \"mentee\": { \"type\": \"object\" }\r",
+							"    },\r",
+							"    \"required\": [\"type\", \"mentee\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/admin/mentee/5fae630bfc1f9147e06d00d2",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"mentee",
+						"5fae630bfc1f9147e06d00d2"
+					]
+				},
+				"description": "Get a mentee's details using its id."
+			},
+			"response": []
+		},
+		{
+			"name": "Feedback",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0052603e-5bb4-4613-b545-50b0a2fc235e",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"totalResults\": { \"type\": \"number\" },\r",
+							"        \"results\": { \"type\": \"array\" }\r",
+							"    },\r",
+							"    \"required\": [\"totalResults\", \"results\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\": \"pending\",\r\n    \"page\": 1,\r\n    \"perPage\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{serverURL}}/admin/feedback",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"feedback"
+					]
+				},
+				"description": "Get feedbacks by specifying type as all/critical/pending/resolved.\r\n\r\nUse page and perPage for pagination."
+			},
+			"response": [
+				{
+					"name": "Feedback",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"type\": \"pending\",\r\n    \"page\": 1,\r\n    \"perPage\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serverURL}}/admin/feedback",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"feedback"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "529"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"211-2C6R/VO/aKUfHzEMEGFpmOmXahU\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:44:42 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalResults\": 1,\n    \"results\": [\n        {\n            \"mentorId\": \"UNDEFINED\",\n            \"menteeId\": \"UNDEFINED\",\n            \"status\": \"pending\",\n            \"effort\": \"\",\n            \"mentorEffort\": \"\",\n            \"serviceSatisfaction\": \"\",\n            \"mathAssignment\": \"\",\n            \"physicsAssignment\": \"false\",\n            \"chemAssignment\": \"false\",\n            \"assignedWork\": \"false\",\n            \"supportMentor\": \"false\",\n            \"queryMentor\": \"false\",\n            \"materialMentor\": \"false\",\n            \"motivateMentor\": \"false\",\n            \"regularMentor\": \"false\",\n            \"focusMentor\": \"false\",\n            \"difficultMentor\": \"false\",\n            \"carnotEffectiveness\": \"false\",\n            \"commentMentor\": \"false\",\n            \"carnotRecommend\": \"false\",\n            \"_id\": \"5fb8a39bf01b9e47fc3134aa\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Mentors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1a6f5c4a-6dd7-4f41-b9b3-7d55b587cf1d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"const schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"properties\": {\r",
+							"        \"totalResults\": { \"type\": \"number\" },\r",
+							"        \"results\": { \"type\": \"array\" }\r",
+							"    },\r",
+							"    \"required\": [\"totalResults\", \"results\"]\r",
+							"}\r",
+							"pm.test(\"Validate Schema\", function () {\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{serverURL}}/admin/fetch-mentors",
+					"host": [
+						"{{serverURL}}"
+					],
+					"path": [
+						"admin",
+						"fetch-mentors"
+					]
+				},
+				"description": "Get all mentors' name and #mentees under them."
+			},
+			"response": [
+				{
+					"name": "Get Mentors",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serverURL}}/admin/fetch-mentors",
+							"host": [
+								"{{serverURL}}"
+							],
+							"path": [
+								"admin",
+								"fetch-mentors"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "92"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"5c-zOymb6yKwVzAMxcRafDdfcQS/OI\""
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 07 Dec 2020 07:45:21 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalResults\": 2,\n    \"results\": [\n        {\n            \"name\": \"mentor\",\n            \"mentees\": 1\n        },\n        {\n            \"name\": \"chanakya\",\n            \"mentees\": 0\n        }\n    ]\n}"
+				}
+			]
+		}
+	],
+	"protocolProfileBehavior": {}
+}
